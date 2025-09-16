@@ -65,7 +65,7 @@ router.post("/", protect, async (req, res) => {
       collect_request_id, // external PG ID
       order_amount: Number(amount),
       transaction_amount: Number(amount),
-      status: "pending",
+      status: "PENDING",
       payment_mode: "",
       payment_details: "",
       bank_reference: "",

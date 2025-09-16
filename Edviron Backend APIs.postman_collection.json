@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "b0c615fc-83c2-4c21-b567-ec298399e595",
+		"name": "Edviron Backend APIs",
+		"description": "Collection for testing Edviron Assignment APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26604659"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders (Protected)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook Test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"status\": 200,\n  \"order_info\": {\n    \"order_id\": \"68c8c921937cfebbff77b9d6\",\n    \"transaction_amount\": 22,\n    \"gateway\": \"PhonePe\",\n    \"bank_reference\": \"YESBNK222\",\n    \"status\": \"success\",\n    \"payment_mode\": \"upi\",\n    \"payment_details\": \"success@ybl\",\n    \"payment_message\": \"payment success\",\n    \"payment_time\": \"2025-04-23T08:14:21.945+00:00\",\n    \"error_message\": \"NA\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/webhook",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"webhook"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzYwN2IzODc1YzRiYmViM2VlNWI1YiIsImlhdCI6MTc1Nzk4ODI4MSwiZXhwIjoxNzU4NTkzMDgxfQ.pDWT9wSTNW5O7uF7vbYT4N4VTOGql8pdGkTmNCBeDyA",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"amount\":\"888\",\r\n \"callback_url\": \"google.com\",\r\n  \"trustee_id\":\"xyz\",\r\n   \"student_info\":{\r\n    \"id\": \"ABC\",\r\n    \"name\": \"Maaz Shaikh\",\r\n    \"email\": \"xyz@gmail.com\"\r\n}, \r\n\"gateway_name\":\"cashfree\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/create-payment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"create-payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edviron Payment Status",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVlSWQiOiI2NWIwZTU1MmRkMzE5NTBhOWI0MWM1YmEiLCJJbmRleE9mQXBpS2V5Ijo2LCJpYXQiOjE3MTE2MjIyNzAsImV4cCI6MTc0MzE3OTg3MH0.Rye77Dp59GGxwCmwWekJHRj6edXWJnff9finjMhxKuw",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://dev-vanilla.edviron.com/erp/collect-request/68c8c921154d1bce65b49853?school_id=65b0e6293e9f76a9694d84b4&sign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY2hvb2xfaWQiOiI2NWIwZTYyOTNlOWY3NmE5Njk0ZDg0YjQiLCJjb2xsZWN0X3JlcXVlc3RfaWQiOiI2OGM4YzkyMTE1NGQxYmNlNjViNDk4NTMiLCJpYXQiOjE3NTc5ODk4NTZ9.zftqsN-Aca7WrgjnwAiJqpYQU-NFXXgVTBt_euniT_U",
+					"protocol": "https",
+					"host": [
+						"dev-vanilla",
+						"edviron",
+						"com"
+					],
+					"path": [
+						"erp",
+						"collect-request",
+						"68c8c921154d1bce65b49853"
+					],
+					"query": [
+						{
+							"key": "school_id",
+							"value": "65b0e6293e9f76a9694d84b4"
+						},
+						{
+							"key": "sign",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY2hvb2xfaWQiOiI2NWIwZTYyOTNlOWY3NmE5Njk0ZDg0YjQiLCJjb2xsZWN0X3JlcXVlc3RfaWQiOiI2OGM4YzkyMTE1NGQxYmNlNjViNDk4NTMiLCJpYXQiOjE3NTc5ODk4NTZ9.zftqsN-Aca7WrgjnwAiJqpYQU-NFXXgVTBt_euniT_U"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

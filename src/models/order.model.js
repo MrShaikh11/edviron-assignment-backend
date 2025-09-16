@@ -9,10 +9,9 @@ const studentInfoSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema(
   {
     school_id: { type: mongoose.Schema.Types.Mixed, required: true },
-    trustee_id: { type: mongoose.Schema.Types.Mixed, required: true },
+    trustee_id: { type: String, required: true },
     student_info: { type: studentInfoSchema, required: true },
     gateway_name: { type: String, required: true },
-    collect_id: { type: String },
   },
   { timestamps: true }
 );

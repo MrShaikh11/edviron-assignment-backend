@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use("/api/webhook", webhookRoutes);
-app.use("/create-payment", createPaymentRoutes);
+app.use("/api/create-payment", createPaymentRoutes);
 app.use("/api/transactions", transactionsRoute);
 app.use("/api/transaction-status", transactionStatusRoute);
 
