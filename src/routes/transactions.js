@@ -10,52 +10,50 @@ router.get("/", async (req, res) => {
     const transactions = await Order.aggregate([
       {
         $lookup: {
-          from: "orderstatuses", // collection name
+          from: "orderstatuses", // collection of OrderStatus
           localField: "_id", // Order._id
-          foreignField: "collect_id", // matches OrderStatus.collect_id
+          foreignField: "collect_id", // OrderStatus.collect_id
           as: "statusInfo",
         },
       },
       {
         $unwind: {
           path: "$statusInfo",
-          preserveNullAndEmptyArrays: true, // keep Orders even if no status
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
         $project: {
-          _id: 0, // hide Mongo _id
-          collect_id: "$_id", // ✅ collect_id
-          school_id: 1, // ✅ school_id
-          gateway: "$gateway_name", // ✅ gateway
-          order_amount: "$statusInfo.order_amount", // ✅ order_amount
-          transaction_amount: "$statusInfo.transaction_amount", // ✅ transaction_amount
-          status: "$statusInfo.status", // ✅ status
-          custom_order_id: 1, // ✅ custom_order_id
+          collect_id: "$_id",
+          school_id: 1,
+          gateway: "$gateway_name",
+          order_amount: "$statusInfo.order_amount",
+          transaction_amount: "$statusInfo.transaction_amount",
+          status: "$statusInfo.status",
+          custom_order_id: "$statusInfo.collect_request_id", // ✅ rename collect_request_id
         },
       },
     ]);
 
     res.json({ success: true, data: transactions });
   } catch (err) {
-    console.error("Error fetching transactions:", err.message);
-    res.status(500).json({ success: false, error: err.message });
+    console.error("Error fetching transactions:", err);
+    res.status(500).json({ success: false, error: "Server error" });
   }
 });
 
 // GET /transactions/school/schoolId
-
 router.get("/school/:schoolId", async (req, res) => {
   try {
     const { schoolId } = req.params;
 
     const transactions = await Order.aggregate([
       {
-        $match: { school_id: schoolId }, // filter orders by school
+        $match: { school_id: schoolId },
       },
       {
         $lookup: {
-          from: "orderstatuses", // collection name in Mongo (plural lowercase)
+          from: "orderstatuses",
           localField: "_id",
           foreignField: "order_id",
           as: "statusInfo",
@@ -64,7 +62,7 @@ router.get("/school/:schoolId", async (req, res) => {
       {
         $unwind: {
           path: "$statusInfo",
-          preserveNullAndEmptyArrays: true, // show even if no status yet
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
@@ -75,7 +73,7 @@ router.get("/school/:schoolId", async (req, res) => {
           order_amount: 1,
           transaction_amount: "$statusInfo.transaction_amount",
           status: "$statusInfo.status",
-          custom_order_id: 1,
+          custom_order_id: "$statusInfo.collect_request_id",
         },
       },
     ]);
