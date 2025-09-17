@@ -45,33 +45,51 @@ const createCollectRequest = async ({ amount, callback_url }) => {
     throw err;
   }
 };
-
 const getCollectRequest = async (collect_request_id) => {
   if (!process.env.PG_KEY)
     throw new Error("PG_KEY not configured in environment variables");
+  if (!process.env.PAYMENT_API_KEY)
+    throw new Error("PAYMENT_API_KEY not configured in environment variables");
+  if (!process.env.PG_STATUS_URL)
+    throw new Error("PG_GET_URL not configured in environment variables");
   if (!process.env.SCHOOL_ID)
     throw new Error("SCHOOL_ID not configured in environment variables");
-  if (!process.env.PG_GET_URL)
-    throw new Error("PG_GET_URL not configured in environment variables");
+  if (!collect_request_id) throw new Error("collect_request_id is required");
 
-  // payload for signing
+  // payload for signing (must match Edviron spec)
   const payload = {
     school_id: process.env.SCHOOL_ID,
     collect_request_id,
   };
 
   const sign = jwt.sign(payload, process.env.PG_KEY, { algorithm: "HS256" });
+  // build URL and headers
+  const url = `${process.env.PG_STATUS_URL}/${encodeURIComponent(
+    collect_request_id
+  )}?school_id=${encodeURIComponent(
+    process.env.SCHOOL_ID
+  )}&sign=${encodeURIComponent(sign)}`;
 
-  const url = `${process.env.PG_GET_URL}/${collect_request_id}?school_id=${process.env.SCHOOL_ID}&sign=${sign}`;
+  const headers = {
+    Authorization: `Bearer ${process.env.PAYMENT_API_KEY}`,
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
 
   try {
-    const resp = await axios.get(url, { timeout: 15000 });
-    return resp.data; // should contain order status + details
+    const resp = await axios.get(url, { headers, timeout: 15000 });
+
+    return resp.data;
   } catch (err) {
-    console.error(
-      "Error calling getCollectRequest:",
-      err.response?.data || err.message
-    );
+    if (err.response) {
+      console.error(
+        "getCollectRequest error:",
+        err.response.status,
+        err.response.data
+      );
+    } else {
+      console.error("getCollectRequest error:", err.message);
+    }
     throw err;
   }
 };

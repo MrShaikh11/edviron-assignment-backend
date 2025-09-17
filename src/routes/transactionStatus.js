@@ -1,6 +1,7 @@
 import express from "express";
 import OrderStatus from "../models/orderStatus.model.js";
 import Order from "../models/order.model.js";
+import paymentService from "../services/paymentService.js";
 
 const router = express.Router();
 
@@ -33,4 +34,27 @@ router.get("/:order_id", async (req, res) => {
   }
 });
 
+router.get("/edviron/:collect_request_id", async (req, res) => {
+  const { collect_request_id } = req.params;
+
+  try {
+    // Call your service function
+    const statusData = await paymentService.getCollectRequest(
+      collect_request_id
+    );
+
+    return res.json({
+      success: statusData.status,
+      collect_request_id,
+      status: statusData.status,
+      details: statusData,
+    });
+  } catch (err) {
+    console.error("Error fetching collect request status:", err.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch collect request status",
+    });
+  }
+});
 export default router;
